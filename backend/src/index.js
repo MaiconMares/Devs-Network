@@ -1,12 +1,12 @@
 const express = require('express'); //require() busca o pacote express em /node_modules
-const mongoose = require('mongoose'); //require() busca o pacote express em /node_modules
 const cors = require('cors');
+const mongoose = require('mongoose'); //require() busca o pacote express em /node_modules
 const routes = require('./routes');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
-app.use(cors);
 app.use(routes);
 
 app.get('/users', (request, response) => {
