@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import api from './services/api';
 import './App.css';
 import './global.css';
 import './Sidebar.css';
@@ -12,6 +13,16 @@ function App() {
 
   async function handleSaveDev(event) {
     event.preventDefault();
+    /* Impede o comportamento padrão do formulário HTML que é redirecionar 
+       para uma nova página quando o formulário terminar de ser preenchido */
+
+    const response = await api.post('/devs', {
+      github_username,
+      techs,
+      latitude,
+      longitude
+    })
+    console.log(response.data);
   }
 
   useEffect(() => {
