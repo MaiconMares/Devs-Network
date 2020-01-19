@@ -3,10 +3,11 @@ const parseStringAsArray = require('../utils/parseStringAsArray');
 
 module.exports = {
     async filtrarDevs(request, response) {
-        const { longitude, latitude, techs } = request.query;
+        const { latitude, longitude, techs } = request.query;
         const techsArray = parseStringAsArray(techs);
 
-        const devs = Dev.find({
+        console.log(request.query);
+        const devs = await Dev.find({
             techs: {
                 $in: techsArray,
                 /* $in é um operador do MongoDB que filtra itens salvos,
@@ -22,13 +23,11 @@ module.exports = {
                         type: 'Point',
                         coordinates: [longitude, latitude],
                     },
-                    $maxDistance: 10000,
+                    $maxDistance: 100000,
                 }
             }
         });
 
-        console.log(techsArray);
-
-        return response.json({ devs: []});
+        return response.json({ devs });
     }
 }
