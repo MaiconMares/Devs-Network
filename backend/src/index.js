@@ -2,12 +2,17 @@ const express = require('express'); //require() busca o pacote express em /node_
 const cors = require('cors');
 const mongoose = require('mongoose'); //require() busca o pacote express em /node_modules
 const routes = require('./routes');
+const http = require('http');
+const { setupWebsocket } = require('./websocket');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(routes);
+const server = http.Server(app);
+
+setupWebsocket(server);
 
 app.get('/users', (request, response) => {
     console.log(request.query);
@@ -31,4 +36,4 @@ app.post('/users', (request, response) => {
     return response.json({ message: "Très bien, bravo bravo!" });
 });
 
-app.listen(4200);
+server.listen(4200);
