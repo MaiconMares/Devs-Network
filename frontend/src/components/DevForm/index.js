@@ -21,7 +21,7 @@ function DevForm({ onSubmit }) {
         },
         {
             timeout: 3000,
-            //O 3º parâm. são condições extrar que eu posso passar para esta função
+            //O 3º parâm. são condições extras que eu posso passar para esta função
         }
         )
     }, []);
@@ -31,12 +31,12 @@ function DevForm({ onSubmit }) {
         /* Impede o comportamento padrão do formulário HTML que é redirecionar 
            para uma nova página quando o formulário terminar de ser preenchido */
 
-        await onSubmit(
+        await onSubmit({
             github_username,
             techs,
             latitude,
             longitude
-        );
+        });
 
         setGithubUsername('');
         setTechs('');

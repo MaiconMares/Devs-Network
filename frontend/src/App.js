@@ -21,7 +21,7 @@ function App() {
 
   async function handleSaveDev(data) {
 
-    const response = await api.post('/dev_save',{ data });
+    const response = await api.post('/dev_save', data );
     console.log(response.data);
 
     setDevs([...devs, response.data]);
@@ -36,7 +36,7 @@ function App() {
       <main>
         <ul>
           {devs.map(dev => (
-            <DevItem key={dev._id} dev={dev}/>
+            <DevItem key={dev._id} devTemp={dev}/>
           ))}
         </ul>
       </main>

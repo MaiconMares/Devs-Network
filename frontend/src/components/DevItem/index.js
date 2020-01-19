@@ -2,7 +2,7 @@ import React from 'react';
 import './style.css';
 
 function DevItem(props) {
-    const dev = props.dev;
+    const dev = props.devTemp;
     return (
         <li className="dev-item">
             <header>
