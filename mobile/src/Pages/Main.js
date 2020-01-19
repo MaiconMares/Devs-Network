@@ -4,8 +4,12 @@ import { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location'
 import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; //Icones do expo
 
+import api from './../services/api';
+
 function Main({ navigation }) {
+    const [devs, setDevs] = useState([]);
     const [currentRegion, setCurrentRegion] = useState(null);
+    const [techs, setTechs] = useState('');
 
     useEffect(() => {
         async function loadInitialPosition() {
@@ -34,25 +38,60 @@ function Main({ navigation }) {
         loadInitialPosition();
     }, []);
 
+    async function loadDevs() {
+        const { latitude, longitude } = currentRegion;
+
+        console.log('OK');
+        const response = await api.get('/filter', {
+            params: {
+                latitude,
+                longitude,
+                techs,
+            }
+        });
+
+        setDevs(response.data.devs);
+        console.log(response.data.devs);
+    }
+
+    function handleRegionChanged(region) {
+        console.log(region);
+        setCurrentRegion(region);
+        /* Recebe region do <MapView> quando ha uma mudanca na localizacao e
+           e atualiza seu novo estado */
+    }
+
     if (!currentRegion) {
         return null;
     }
 
     return ( 
         <>
-            <MapView style={styles.attributes} initialRegion={currentRegion}>
-                <Marker coordinate={{ latitude: -15.6480925, longitude: -47.8271517}}>
-                    <Image style={styles.avatar} source={ {uri: 'https://avatars3.githubusercontent.com/u/47460478?s=460&v=4'}}></Image>
+            <MapView 
+                onRegionChangeComplete={handleRegionChanged}
+                style={styles.attributes} 
+                initialRegion={currentRegion}>
+                {devs.map(dev => (
+                    <Marker 
+                        key={dev._id}
+                        coordinate={{
+                            longitude: dev.location.coordinates[0],
+                            latitude: dev.location.coordinates[1], 
+                        }}>
+                    <Image 
+                        style={styles.avatar} 
+                        source={{ uri: dev.avatar_url }}></Image>
                     <Callout onPress={() => {
-                        navigation.navigate('Profile', { github_username: 'MaiconMares' });
+                        navigation.navigate('Profile', { github_username: dev.github_username });
                     }}>
                         <View style={styles.callout}>
-                            <Text style={styles.devName}>Maicon Mares</Text>
-                            <Text style={styles.devBio}>I'm passionate about all things involving Tech.</Text>
-                            <Text style={styles.devTechs}>Javascript, HTML, CSS, Node.js, React Native, React JS, C++, Python</Text>
+                            <Text style={styles.devName}>{dev.name}</Text>
+                            <Text style={styles.devBio}>{dev.bio}</Text>
+                            <Text style={styles.devTechs}>{dev.techs.join(', ')}</Text>
                         </View>
                     </Callout>
-                </Marker>
+                </Marker> 
+                ))}
             </MapView>
             <View style={styles.searchForm}>
                 <TextInput 
@@ -60,9 +99,11 @@ function Main({ navigation }) {
                     placeholder="Buscar devs por techs..."
                     placeholderTextColor="#999"
                     autoCapitalize="words"
-                    autoCorrect={false}>
+                    autoCorrect={false}
+                    value={techs}
+                    onChangeText={text => setTechs(text)}>
                 </TextInput>
-                <TouchableOpacity onPress={() => {}} style={styles.loadButton}>
+                <TouchableOpacity onPress={() => {loadDevs()}} style={styles.loadButton}>
                     <MaterialIcons name="my-location" size={20} color="#fff"/>
                 </TouchableOpacity>
             </View>
