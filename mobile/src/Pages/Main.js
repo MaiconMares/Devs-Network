@@ -5,6 +5,7 @@ import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity } from 'reac
 import { MaterialIcons } from '@expo/vector-icons'; //Icones do expo
 
 import api from './../services/api';
+import socket from './../services/socket';
 
 function Main({ navigation }) {
     const [devs, setDevs] = useState([]);
