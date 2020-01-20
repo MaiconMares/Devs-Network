@@ -5,7 +5,7 @@ import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity } from 'reac
 import { MaterialIcons } from '@expo/vector-icons'; //Icones do expo
 
 import api from './../services/api';
-import socket from './../services/socket';
+import { connect, disconnect, subscribeToNewDevs } from './../services/socket';
 
 function Main({ navigation }) {
     const [devs, setDevs] = useState([]);
@@ -39,6 +39,21 @@ function Main({ navigation }) {
         loadInitialPosition();
     }, []);
 
+    useEffect(() => {
+        subscribeToNewDevs(dev => setDevs([...devs, dev]));
+    }, [devs]);
+
+    function setupWebsocket() {
+        disconnect();
+
+        const { latitude, longitude } = currentRegion;
+        connect(
+            latitude,
+            longitude,
+            techs,
+        );
+    }
+
     async function loadDevs() {
         const { latitude, longitude } = currentRegion;
 
@@ -52,7 +67,7 @@ function Main({ navigation }) {
         });
 
         setDevs(response.data.devs);
-        console.log(response.data.devs);
+        setupWebsocket();
     }
 
     function handleRegionChanged(region) {

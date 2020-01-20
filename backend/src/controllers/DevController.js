@@ -1,6 +1,7 @@
 const Dev = require('../models/Dev');
 const axios = require('axios');
 const parseStringAsArray = require('../utils/parseStringAsArray');
+const { findConnections, sendMessage } = require('./../websocket');
 
 //É a mesma ideia da view do Django
 //Ela só trabalha com um listener para fazer get por controller
@@ -47,7 +48,14 @@ module.exports = {
             passado o valor tem mesmo nome, o JS interpreta automaticamente sem precisar 
             repetir os dois nomes */
 
-            console.log(`Dados salvos: ${dev}`);
+            const sendSocketMessageTo = findConnections(
+                { latitude, longitude }, techsArray
+            );
+
+            console.log(sendSocketMessageTo);
+            sendMessage(sendSocketMessageTo, 'new-dev', dev);
+            /* Envia a mensagem ao novo dev cadastrado que esta de acordo 
+               com as condicoes de filtro (coordenadas e tecnologias) */
         }
         return response.json({ message: 'Réquisition réussi!' });
     },
