@@ -1,9 +1,9 @@
 # Devs-Network
 ## What this is about
-This is a repository about registration and search for developers like a social media, e.g.: Tinder and iFood.
-<img src="./assets/image1.png">
-<img src="./assets/image2.png">
-<img src="./assets/image3.png">
+This is a repository about registration and search for developers like a social media, e.g.: Tinder and iFood. The prints below demonstrate application working:
+<img src="./assets/image1.png" style="max-width: 500px; max-height: 500px">
+<img src="./assets/image2.png" style="max-width: 300px; max-height: 500px">
+<img src="./assets/image3.png" style="max-width: 300px; max-height: 500px">
 
 ## Technical stuffs
 Devs Network is made by ReactJS, ReactNative and NodeJS. It's a simple exercise for learn new techs. 
